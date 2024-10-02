@@ -33,8 +33,8 @@ class Game:
             return []
 
         return [(symbol, (int(x), int(y))) for symbol, x, y in
-                [x.split("-", maxsplit=3) for x in
-                 raw.split("_", maxsplit=size * size)]]
+                [x.split("_", maxsplit=3) for x in
+                 raw.split("-", maxsplit=size * size)]]
 
     def moves_dict(self):
         return {pos: symbol for symbol, pos in self.moves}
@@ -44,7 +44,7 @@ class Game:
                 for y in range(self.size)]
 
     def render_move(self, m) -> str:
-        return f"Move:{self.playing}-{m[0]}-{m[1]}"
+        return f"Move:{self.playing}_{m[0]}_{m[1]}"
 
     def suggested_move(self) -> str:
         possible_moves = [position for (symbol, position) in self.grid() if
