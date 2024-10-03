@@ -8,7 +8,7 @@ async def on_fetch(request):
 
     if "gid" in params:
         moves = params["moves"][0] if "moves" in params else None
-        size = params["size"][0] if "size" in params else 3
+        size = int(params["size"][0]) if "size" in params else 3
         game = Game(
             params["playing"][0],
             Game.parse_moves(moves, size),
@@ -22,6 +22,9 @@ async def on_fetch(request):
 
 # borrowed from https://github.com/otobrglez/tttm-randy
 class Game:
+    move_separator = "_"
+    position_separator = "-"
+
     def __init__(self, playing, moves, size):
         self.playing = playing
         self.moves = moves
@@ -33,8 +36,8 @@ class Game:
             return []
 
         return [(symbol, (int(x), int(y))) for symbol, x, y in
-                [x.split("_", maxsplit=3) for x in
-                 raw.split("-", maxsplit=size * size)]]
+                [x.split(Game.position_separator, maxsplit=3) for x in
+                 raw.split(Game.move_separator, maxsplit=size * size)]]
 
     def moves_dict(self):
         return {pos: symbol for symbol, pos in self.moves}
@@ -44,7 +47,7 @@ class Game:
                 for y in range(self.size)]
 
     def render_move(self, m) -> str:
-        return f"Move:{self.playing}_{m[0]}_{m[1]}"
+        return f"Move:{self.playing}{Game.position_separator}{m[0]}{Game.position_separator}{m[1]}"
 
     def suggested_move(self) -> str:
         possible_moves = [position for (symbol, position) in self.grid() if
