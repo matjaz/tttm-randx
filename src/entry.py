@@ -9,6 +9,8 @@ async def on_fetch(request):
     if "gid" in params:
         moves = params["moves"][0] if "moves" in params else None
         size = int(params["size"][0]) if "size" in params else 3
+        if size < 3:
+            return Response.new("Error:Sorry. Can't do it bro.")
         game = Game(
             params["playing"][0],
             Game.parse_moves(moves, size),
